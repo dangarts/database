@@ -6,12 +6,12 @@ EXERCISES
    - 42 - integer
    - 09/02/1945 - date
    - 98.7 - float
-   - $15.99 - float
+   - $15.99 - float / smallmoney / money / decimal
 
 
 ////// 2. Explain when a database would be used. Explain when a text file would be used. 
 
-Text files should not be used for storing data unless it is used by a single program and multiple operations are requested linearly instead of simultaneously.  If by chance mulitple programs are running and executes the file with the same operation, the OS may lock the file in result failure to write or the following operations may overwrite the first.
+Text files should not be used for storing data unless it is used by a single program and multiple operations are requested linearly instead of simultaneously.  If by chance multiple programs are running and executes the file with the same operation, the OS may lock the file in result failure to write or the following operations may overwrite the first.
 
 Databases helps solve the issues found in text files.  Its ideal use is when data needs to be stored, searched, and accessed by multiple systems and lives beyond the user session or application process. 
 
@@ -84,12 +84,24 @@ A database is built out like a spreadsheet.  Its a structured layout of a 2 dime
       FROM users
       WHERE name = 'DeAndre Data';
 
+      email             | signup
+      ------------------+------------
+      datad@comcast.net | 2008-01-20
+
    - The user ID for the user with email 'aleesia.algorithm@uw.edu'.
       SELECT userid
       FROM users
       WHERE email = "aleesia.algorithm@uw.edu";
 
+      userid
+      -------
+      1
+
    - All the columns for the user ID equal to 4.
       SELECT *
       FROM users
       WHERE userid = '4';
+
+      userid | name           | email             | signup
+      -------+----------------+-------------------+-------------
+      4      | Brandy Boolean | bboolean@nasa.gov | 1999-10-15
