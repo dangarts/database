@@ -1,0 +1,72 @@
+EXERCISES
+
+////// 1. List the commands for adding, updating, and deleting data.
+   Adding:
+   INSERT INTO
+
+   Updating:
+   UPDATE
+
+   Deleting:
+   DELETE FROM
+
+
+////// 2. Explain the structure for each type of command.
+   Adding:
+   Eg. INSERT INTO <table-name> VALUES (<value>, <value>, ...)
+
+   Updating:
+   Eg. UPDATE <table-name> SET <clause> WHERE <condition>
+
+   Deleting:
+   Eg. DELETE FROM <table-name> WHERE <condition>
+
+
+////// 3. What are some of the data types that can be used in tables? Give a real-world example of each type.
+   Numbers:
+      - decimal (12.34) E.g. Measurement
+      - integer (12) E.g. Age
+      - numeric (12.34) E.g. Pricing
+
+   Text:
+      - text (hello)  E.g. Description
+      - character (a) E.g. Grade
+
+   Date & Type:
+      - date (1999-01-08) E.g. Article Date
+
+   Monetary Types:
+      - money (12.34) E.g. Pricing
+
+
+////// 4. Decide how to create a new table to hold a list of people invited to a wedding dinner. The table needs to have first and last names, whether they sent in their RSVP, the number of guests they are bringing, and the number of meals (1 for adults and 1/2 for children).
+   // Which data type would you use to store each of the following pieces of information?
+      // First and last name.
+         text
+      // Whether they sent in their RSVP.
+         boolean
+      // Number of guests.
+         smallint, integer
+      // Number of meals.
+         smallint, integer
+
+   // Write a command that creates the table to track the wedding dinner.
+      CREATE TABLE wedding_dinner (
+         text first_name,
+         text last_name,
+         boolean rsvp,
+         smallint guests,
+         smallint meals
+      )
+
+   // Write a command that adds a column to track whether the guest sent a thank you card.
+      ALTER TABLE wedding_dinner ADD COLUMN thank_you_card_sent boolean;
+   
+   // You have decided to move the data about the meals to another table, so write a command to remove the column storing the number meals from the wedding table.
+      ALTER TABLE wedding_dinner DROP COLUMN meals;
+   
+   // The guests will need a place to sit at the reception, so write a command that adds a column for table number.
+      ALTER TABLE wedding_dinner ADD COLUMN table_number smallint;
+
+   // The wedding is over and we do not need to keep this information, so write a command that deletes the table numbers from the database.
+      ALTER TABLE wedding_dinner DROP COLUMN table_number;
