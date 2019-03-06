@@ -1,0 +1,155 @@
+EXERCISE
+
+////// 1. How do you find related data held in two separate data tables?
+   Each table must have bonding keys.  Primary and foreign keys.  With this established, JOINS can be used to query related data.
+
+
+////// 2. Explain, in your own words, the difference between an INNER JOIN, LEFT OUTER JOIN, and RIGHT OUTER JOIN. Give a real-world example for each.
+   INNER JOIN: Queries common rows between multiple tables and outputs that to the results.
+      E.g. Table A contains data for a user's first name.  Table B contains data for the user's last name.  Display results if only the full name is available.
+
+   LEFT OUTER JOIN: Displays data from the 1st table[left] and any matching data from the second table[right].
+      E.g. Table A contains list of major cities around the world. Table B contains major cities and there estimated population.  A query can be used to display the population for every city displayed in Table A.
+
+   RIGHT OUTER JOIN: The opposite of LEFT OUTER JOIN.
+      E.g. Table A contains email address for users. Table B contains list of users to target for an email campaign.  A query can be used to display all the email address for the list of users displayed in table B.
+
+
+////// 3. Define primary key and foreign key. Give a real-world example for each.
+   Primary key is a unique identifier for each row in a db table.  The primary key of a table is often the foreign key of another table.  This association allows queres to display related results from multiple tables.
+
+   E.g. Table A contains Arizona citizens and the primary key could be drivers license ID number.  This is possible as each number is unique.  Table B may contain all the DUI occuring the past 30 days.  Each record having a foreign key[driver ID number].
+
+
+////// 4. Define aliasing.
+   Aliasing is a technique of creating short variable names to replace the table name in a query.  This abbreviation allows queries to be created a bit quicker and is normally easier to read.
+
+
+////// 5. Change this query so that you are using aliasing:
+   SELECT p.name, c.salary,
+      c.vacation_days 
+      FROM professor AS p
+      JOIN compensation AS c
+      ON p.id = c.professor_id;
+
+
+////// 6. Why would you use a NATURAL JOIN? Give a real-world example.
+   Natural join is used to implicitly combine 2 tables together.  The final queried result is structured in a way where associated columns with the same name will appear once.  The associated column must contain the same data type.
+
+   E.g. Table A contains various grocery items in a stores inventory.  Table B contains a list of companies that produces the products that in the stores inventory.  Both share a common column name "company-id".  A "natural join" would result is displaying data whom both share the associated column "company-id".
+
+
+////// 7. Using this Employee schema and data, write queries to find the following information:
+
+   // List all employees and all shifts.
+      select * from employees natural join shifts;
+
+////// 8. Using this Adoption schema and data, please write queries to retrieve the following information and include the results:
+
+   // Create a list of all volunteers. If the volunteer is fostering a dog, include each dog as well.
+
+      select volunteers.first_name, volunteers.last_name, dogs.name, dogs.breed
+      from volunteers
+      left join dogs
+      on volunteers.foster_dog_id = dogs.id;
+
+      | first_name | last_name  | name      | breed              |
+      | ---------- | ---------- | --------- | ------------------ |
+      | Rubeus     | Hagrid     | Munchkin  | dachsund chihuahua |
+      | Marjorie   | Dursley    | Marmaduke | great dane         |
+      | Sirius     | Black      |           |                    |
+      | Remus      | Lupin      |           |                    |
+      | Albus      | Dumbledore |           |                    |
+
+
+   // The cat's name, adopter's name, and adopted date for each cat adopted within the past month to be displayed as part of the "Happy Tail" social media promotion which posts recent successful adoptions.
+
+      select cats.name, adopters.first_name, cat_adoptions.date
+      from cats
+      join cat_adoptions on cats.id = cat_adoptions.cat_id
+      join adopters on cat_adoptions.adopter_id = adopters.id
+      where cat_adoptions.date > CURRENT_DATE - INTERVAL '30 DAYS';
+
+      | name     | first_name | date                     |
+      | -------- | ---------- | ------------------------ |
+      | Mushi    | Arabella   | 2019-02-14T00:00:00.000Z |
+      | Victoire | Argus      | 2019-02-19T00:00:00.000Z |
+
+   // Create a list of adopters who have not yet chosen a dog to adopt.
+
+      select adopters.first_name
+      from adopters
+      join dog_adoptions on adopters.id != dog_adoptions.adopter_id;
+
+      | first_name |
+      | ---------- |
+      | Hermione   |
+      | Arabella   |
+
+   // Lists of all cats and all dogs who have not been adopted.
+
+      select dogs.name
+      from dogs
+      left join dog_adoptions on dogs.id = dog_adoptions.dog_id
+      where dog_adoptions.dog_id is NULL;
+
+      | name      |
+      | --------- |
+      | Boujee    |
+      | Munchkin  |
+      | Marley    |
+      | Lassie    |
+      | Marmaduke |
+
+      select cats.name
+      from cats
+      left join cat_adoptions on cats.id = cat_adoptions.cat_id
+      where cat_adoptions.cat_id is NULL;
+
+      | name     |
+      | -------- |
+      | Seashell |
+      | Nala     |
+
+// The name of the person who adopted Rosco.
+
+      select adopters.first_name
+      from adopters
+      join dog_adoptions on adopters.id = dog_adoptions.adopter_id;
+
+      | first_name |
+      | ---------- |
+      | Argus      |
+
+
+////// 9. Using this Library schema and data, write queries applying the following scenarios and include the results:
+
+   // To determine if the library should buy more copies of a given book, please provide the names and position, in order, of all of the patrons with a hold (request for a book with all copies checked out) on "Advanced Potion-Making".
+
+      select patrons.name
+      from patrons
+      join holds on patrons.id = holds.patron_id
+      where holds.isbn = '9136884926';
+
+      | name           |
+      | -------------- |
+      | Terry Boot     |
+      | Cedric Diggory |
+
+   // List all of the library patrons. If they have one or more books checked out, list the books with the patrons.
+
+      select patrons.name, books.title
+      from transactions
+      join patrons on transactions.patron_id = patrons.id
+      left join books on transactions.isbn = books.isbn 
+      and transactions.checked_in_date is null;
+
+      | name             | title                                   |
+      | ---------------- | --------------------------------------- |
+      | Hermione Granger |                                         |
+      | Cho Chang        |                                         |
+      | Terry Boot       |                                         |
+      | Padma Patil      |                                         |
+      | Terry Boot       | Advanced Potion-Making                  |
+      | Hermione Granger |                                         |
+      | Cedric Diggory   | Fantastic Beasts and Where to Find Them |
